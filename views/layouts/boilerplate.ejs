@@ -24,7 +24,7 @@
     <header class="nav">
 
 
-        <% if (curruser) { %>
+        <% if (typeof curruser !=="undefined" && curruser) { %>
             <div class="roamly-profile">
                 <div class="roamly-profile__avatar">
                     <%= curruser.username ? curruser.username.charAt(0).toUpperCase() : "T" %>
