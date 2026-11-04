@@ -58,13 +58,22 @@ const sessionoptions = {
 
 
 
-app.use(session(sessionoptions));
-app.use(flash())
-app.use(passport.initialize());
-app.use(passport.session());
+
+
 passport.use(new Localstrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+
+
+app.use(session(sessionoptions));
+app.use(flash());
+
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
