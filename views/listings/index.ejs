@@ -1,0 +1,63 @@
+<% layout("./layouts/boilerplate") %>
+
+
+    <div class="page-head">
+        <h1 class="page-title">Stays</h1>
+        <span class="count">
+            <%= data.length %>
+                <%= data.length===1 ? "place" : "places" %>
+        </span>
+    </div>
+
+    <% if (data.length===0) { %>
+        <div class="empty">
+            <h2>No listings yet</h2>
+            <p>Add the first place and it will show up here.</p>
+            <a class="btn btn-primary" href="/listing/new">Add your listing</a>
+        </div>
+        <% } else { %>
+            <section class="grid">
+                <% for (let listing of data) { %>
+                    <article class="card">
+                        <a class="card-link" href="/listings/<%= listing.id %>">
+                            <div class="card-media">
+                                <% if (listing.image && listing.image.url) { %>
+                                    <img src="<%= listing.image.url %>" alt="<%= listing.title %>" loading="lazy">
+                                    <% } else { %>
+                                        <div class="img-fallback"></div>
+                                        <% } %>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-topline">
+                                    <div class="card-location">
+                                        <%= listing.location %>, <%= listing.country %>
+                                    </div>
+
+                                    <div class="card-rating" aria-label="Rating unavailable">
+                                        <span aria-hidden="true">★</span>
+                                        <span>New</span>
+                                    </div>
+                                </div>
+
+                                <div class="card-title">
+                                    <%= listing.title %>
+                                </div>
+
+                                <div class="card-price">
+                                    <strong>₹<%= Number(listing.price || 0).toLocaleString("en-IN") %>
+                                    </strong>
+                                    <i id="posttax">+18% GST</i>
+                                    <span>/ night</span>
+                                </div>
+                            </div>
+                        </a>
+                        <button type="button" class="heart" aria-label="Save to wishlist" aria-pressed="false">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 21s-7.500-4.600-9.500-9.200C1.200 8.600 3 5 6.500 5c2 0 3.700 1.100 5.500 3 1.800-1.900 3.500-3 5.500-3 3.500 0 5.300 3.600 4 6.800C19.500 16.400 12 21 12 21z" />
+                            </svg>
+                        </button>
+                    </article>
+                    <% } %>
+            </section>
+            <% } %>

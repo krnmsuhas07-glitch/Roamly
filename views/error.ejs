@@ -1,0 +1,26 @@
+<% layout("./layouts/boilerplate") %>
+
+    <div class="error-page">
+        <div class="error-card">
+            <p class="error-label">OOPS! SOMETHING WENT WRONG</p>
+
+            <h1 class="error-code">
+                <%= err.statusCode %>
+            </h1>
+
+            <h2 class="error-title">HEY FOR SORRY THAT , ITS ON US&#128140;</h2>
+            <h2>
+                <%= err.message %>
+            </h2>
+
+            <div class="error-actions">
+                <a href="/listings" class="btn btn-primary">
+                    Explore stays
+                </a>
+
+                <button onclick="history.back()" class="btn btn-ghost">
+                    Go back
+                </button>
+            </div>
+        </div>
+    </div>

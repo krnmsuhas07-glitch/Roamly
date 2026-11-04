@@ -1,0 +1,88 @@
+<% layout("./layouts/boilerplate") %>
+
+    <div class="form-wrap">
+        <a class="back" href="/listings">&larr; All stays</a>
+        <h1 class="page-title">Add your listing</h1>
+        <p class="form-lead">Tell guests what makes your place worth the trip.</p>
+
+        <form class="form needs-validation" action="/listing/new" method="POST" enctype="multipart/form-data"
+            novalidate>
+            <div class="field">
+                <label for="title">Title</label>
+                <input id="title" name="title" placeholder="Cozy villa near the beach" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please provide a valid title.
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="5"
+                    placeholder="Describe the space, the neighborhood, and what's nearby" required></textarea>
+
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please provide a valid description.
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="image">Upload Listing Image</label>
+                <input id="image" type="file" name="image" accept="image/png,image/jpeg,image/webp" required>
+                <div class="invalid-feedback">
+                    Please upload a listing image.
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="price">Price per night</label>
+
+                <div class="input-prefix">
+                    <span>&#8377;</span>
+                    <input id="price" name="price" type="number" min="0" placeholder="2500" required>
+                </div>
+
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+
+                <div class="invalid-feedback">
+                    Please provide a valid price.
+                </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label for="location">Location</label>
+                    <input id="location" name="location" placeholder="Goa" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid location.
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="country">Country</label>
+                    <input id="country" name="country" placeholder="India" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid country.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a class="btn btn-ghost" href="/listings">Cancel</a>
+                <button class="btn btn-primary">Add listing</button>
+            </div>
+        </form>
+
+    </div>

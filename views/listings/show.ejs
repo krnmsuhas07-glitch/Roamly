@@ -1,0 +1,348 @@
+<% layout("./layouts/boilerplate") %>
+
+    <% if (!listing) { %>
+        <main class="show-empty-state">
+            <h2>No stays found</h2>
+            <p>We couldn't find a listing in that location. Check the spelling or browse everything.</p>
+            <a class="show-button show-button--primary" href="/listings">Browse all stays</a>
+        </main>
+        <% } else { %>
+            <main class="listing-show-page">
+                <div class="show-back-row">
+                    <a class="show-back-link" href="/listings">
+                        <span aria-hidden="true">←</span>
+                        <span>All stays</span>
+                    </a>
+                </div>
+
+                <header class="show-listing-header">
+                    <div class="show-heading-copy">
+                        <h1 class="show-title">
+                            <%= listing.title %>
+                        </h1>
+                        <p class="show-sub">
+                            <span class="show-location-pin" aria-hidden="true">⌖</span>
+                            <%= listing.location %>, <%= listing.country %>
+                        </p>
+                    </div>
+
+                    <div class="listing-owner">
+                        <div class="owner-avatar" aria-hidden="true">
+                            <%= listing.owner && listing.owner.username ? listing.owner.username.charAt(0).toUpperCase()
+                                : "T" %>
+                        </div>
+                        <div class="owner-info">
+                            <span class="owner-label">Hosted by</span>
+                            <h2 class="owner-name">
+                                <%= listing.owner && listing.owner.username ? listing.owner.username : "Roamly host" %>
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+
+                <figure class="show-hero">
+                    <% if (listing.image && listing.image.url) { %>
+                        <img src="<%= listing.image.url %>" alt="<%= listing.title %>" fetchpriority="high">
+                        <% } else { %>
+                            <div class="show-image-fallback" role="img"
+                                aria-label="No image available for <%= listing.title %>">
+                                <span>No image available</span>
+                            </div>
+                            <% } %>
+                </figure>
+
+                <div class="show-layout">
+                    <section class="show-main" aria-label="Listing details">
+                        <section class="show-content-section">
+                            <h2 class="show-section-title">About this place</h2>
+                            <p class="show-desc">
+                                <%= listing.description %>
+                            </p>
+                        </section>
+
+                        <hr class="show-divider">
+
+                        <section class="show-content-section">
+                            <h2 class="show-section-title">Where you'll be</h2>
+                            <p class="show-desc">
+                                <%= listing.location %>, <%= listing.country %>
+                            </p>
+                        </section>
+                    </section>
+
+                    <aside class="show-booking" aria-label="Booking and listing actions">
+                        <div class="booking-card">
+                            <div class="booking-price">
+                                <strong>&#8377;<%= (listing.price || 0).toLocaleString("en-IN") %></strong>
+                                <span>per night</span>
+                            </div>
+                            <% if (curruser && listing.owner && listing.owner._id && curruser._id &&
+                                curruser._id.equals(listing.owner._id)) { %>
+                                <div class="booking-owner-actions">
+                                    <a class="show-button show-button--primary"
+                                        href="/listing/<%= listing._id %>/edit">Edit listing</a>
+                                    <form method="POST" action="/listing/<%= listing.id %>?_method=DELETE"
+                                        onsubmit="return confirm('Delete this listing? This action cannot be undone.');">
+                                        <button type="submit" class="show-button show-button--danger">Delete
+                                            listing</button>
+                                    </form>
+                                </div>
+                                <% } %>
+                        </div>
+                    </aside>
+                </div>
+
+                <% if (curruser && listing.owner && listing.owner._id && curruser._id &&
+                    listing.owner._id.equals(curruser._id)) { %>
+                    <section class="review-form">
+                        <div class="review-form-heading">
+                            <h2 class="show-section-title">Leave a review</h2>
+                            <p class="review-subtitle">Share your experience to help other travelers.</p>
+                        </div>
+
+                        <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate
+                            class="needs-validation">
+                            <div class="show-form-group">
+                                <div class="rating-header">
+                                    <label>Rating</label>
+                                    <span class="rating-value"><span id="ratingValue">3</span>/5</span>
+                                </div>
+
+                                <div class="star-rating" id="starRating" role="group" aria-label="Rating">
+                                    <% for (let i=1; i <=5; i++) { %>
+                                        <button type="button" class="rating-star <%= i <= 3 ? 'active' : '' %>"
+                                            data-rating="<%= i %>" aria-label="<%= i %> out of 5 stars">★</button>
+                                        <% } %>
+                                </div>
+
+                                <input type="hidden" id="rating" name="rating" value="3" required>
+                            </div>
+
+                            <div class="show-form-group">
+                                <label for="comment" class="show-form-label">Your comment</label>
+                                <textarea name="comment" id="comment" class="review-textarea"
+                                    placeholder="What did you love about this place?" rows="5" maxlength="500"
+                                    required></textarea>
+                                <div class="character-count"><span id="charCount">0</span>/500</div>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please provide your review.</div>
+                            </div>
+
+                            <button type="submit" class="show-button show-button--primary review-submit">Add
+                                review</button>
+                        </form>
+                    </section>
+                    <% } %>
+
+                        <section class="reviews-section" aria-label="Guest reviews">
+                            <div class="reviews-heading">
+                                <div>
+                                    <h2 class="show-section-title">Reviews</h2>
+                                    <p class="reviews-subtitle">Real experiences from travelers who stayed here.</p>
+                                </div>
+                                <div class="reviews-summary">
+                                    <span class="summary-star" aria-hidden="true">★</span>
+                                    <span>
+                                        <%= listing.reviews ? listing.reviews.length : 0 %>
+                                            <%= listing.reviews && listing.reviews.length===1 ? "review" : "reviews" %>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <% if (!listing.reviews || listing.reviews.length===0) { %>
+                                <div class="no-reviews">
+                                    <div class="no-reviews-icon" aria-hidden="true">✦</div>
+                                    <h3>No reviews yet</h3>
+                                    <p>Be the first to share your experience at this stay.</p>
+                                </div>
+                                <% } else { %>
+                                    <div class="reviews-grid">
+                                        <% listing.reviews.forEach(review=> { %>
+                                            <article class="review-card">
+                                                <form method="POST"
+                                                    action="/listing/<%= listing.id %>/reviews/<%= review.id %>?_method=DELETE"
+                                                    onsubmit="return confirm('Delete this review?');"
+                                                    class="delete-review-form">
+                                                    <button type="submit" class="delete-review-btn"
+                                                        aria-label="Delete review">
+                                                        <span aria-hidden="true">×</span>
+                                                        <span>Delete review</span>
+                                                    </button>
+                                                </form>
+
+                                                <div class="review-card-header">
+                                                    <div class="review-avatar" aria-hidden="true">
+                                                        <%= review.author && review.author.username ?
+                                                            review.author.username.charAt(0).toUpperCase() : "G" %>
+                                                    </div>
+                                                    <div class="review-author">
+                                                        <h3>@<%= review.author && review.author.username ?
+                                                                review.author.username : "Guest" %>
+                                                        </h3>
+                                                        <span>Roamly traveler</span>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="rating-header">
+                                                    <label>Rating</label>
+                                                    <span class="rating-value">
+                                                        <span id="ratingValue">3</span>/5
+                                                    </span>
+                                                </div>
+
+
+                                                <div class="rating-header">
+                                                    <label>Rating</label>
+                                                    <span class="rating-value">
+                                                        <span id="ratingValue">3</span>/5
+                                                    </span>
+                                                </div>
+
+                                                <div class="rating-header">
+                                                    <label>Rating</label>
+                                                    <span class="rating-value">
+                                                        <%= review.rating %>/5
+                                                    </span>
+                                                </div>
+
+                                                <div class="star-rating"
+                                                    aria-label="<%= review.rating %> out of 5 stars">
+                                                    <% for (let i=1; i <=5; i++) { %>
+                                                        <span
+                                                            class="rating-star <%= i <= review.rating ? 'active' : '' %>"
+                                                            aria-hidden="true">★</span>
+                                                        <% } %>
+                                                </div>
+
+                                                <input type="hidden" id="rating" name="rating" value="3" required>
+
+
+                                                <input type="hidden" id="rating" name="rating" value="3" required>
+                                                <div class="invalid-feedback">Please choose a rating.</div>
+
+
+                                                <p class="review-comment">
+                                                    <%= review.comment %>
+                                                </p>
+                                            </article>
+                                            <% }) %>
+                                    </div>
+                                    <% } %>
+                        </section>
+
+
+                        <section class="location-section">
+                            <h2 class="location-heading">Where you'll be</h2>
+
+                            <p class="location-subtitle">
+                                Explore the location and nearby surroundings.
+                            </p>
+
+                            <div class="map-wrapper">
+                                <div id="map"
+                                    data-coordinates='<%= JSON.stringify(listing.geometry ? listing.geometry.coordinates : []) %>'
+                                    data-map-token="<%= mapToken %>">
+                                    data-title="<%= listing.title %>">
+
+                                        <div id="menu">
+                                            <input id="standard-satellite" type="radio" name="rtoggle" checked>
+                                            <label for="standard-satellite">Satellite</label>
+
+                                            <input id="standard" type="radio" name="rtoggle">
+                                            <label for="standard">Standard</label>
+
+                                            <input id="outdoors-v12" type="radio" name="rtoggle">
+                                            <label for="outdoors-v12">Outdoors</label>
+                                        </div>
+                                </div>
+                            </div>
+                        </section>
+
+
+            </main>
+            <script src="https://api.mapbox.com/mapbox-gl-js/v3.33.0/mapbox-gl.js"></script>
+            <script src="/js/map.js"></script>
+            <script src="/js/map.js">
+
+                (() => {
+                    const ratingInput = document.getElementById("rating");
+                    const ratingValue = document.getElementById("ratingValue");
+                    const starRating = document.getElementById("starRating");
+                    if (ratingInput && ratingValue && starRating) {
+                        ratingInput.addEventListener("input", () => {
+                            const rating = Number(ratingInput.value);
+                            ratingValue.textContent = rating;
+                            starRating.textContent = "★".repeat(rating) + "☆".repeat(5 - rating);
+                        });
+                    }
+
+                    const comment = document.getElementById("comment");
+                    const charCount = document.getElementById("charCount");
+                    if (comment && charCount) {
+                        comment.addEventListener("input", () => {
+                            charCount.textContent = comment.value.length;
+                        });
+                    }
+                })();
+                (() => {
+                    const ratingInput = document.getElementById("rating");
+                    const ratingValue = document.getElementById("ratingValue");
+                    const starRating = document.getElementById("starRating");
+
+                    if (ratingInput && ratingValue && starRating) {
+                        const stars = starRating.querySelectorAll(".rating-star");
+
+                        const updateStars = (rating) => {
+                            stars.forEach((star) => {
+                                star.classList.toggle("active", Number(star.dataset.rating) <= rating);
+                            });
+                            ratingInput.value = rating;
+                            ratingValue.textContent = rating;
+                        };
+
+                        stars.forEach((star) => {
+                            star.addEventListener("click", () => {
+                                updateStars(Number(star.dataset.rating));
+                            });
+                        });
+
+                        updateStars(Number(ratingInput.value) || 3);
+                    }
+
+                    const comment = document.getElementById("comment");
+                    const charCount = document.getElementById("charCount");
+                    if (comment && charCount) {
+                        comment.addEventListener("input", () => {
+                            charCount.textContent = comment.value.length;
+                        });
+                    }
+                })();
+
+                const map = new mapboxgl.Map({
+                    accessToken: '<%= process.env.ACCESS_TOKEN %>',
+                    container: 'map', // container ID
+                    style: 'mapbox://styles/mapbox/standard-satellite', // default to standard-satellite style on mount
+                    center: [-2.81361, 36.77271], // starting position [lng, lat]
+                    zoom: 13 // starting zoom
+                });
+
+                const layerList = document.getElementById('menu');
+                const inputs = layerList.getElementsByTagName('input');
+
+                for (const input of inputs) {
+                    input.onclick = (layer) => {
+                        const layerId = layer.target.id;
+                        map.setStyle('mapbox://styles/mapbox/' + layerId);
+                    };
+                }
+
+                console.log(coordinates);
+
+                const marker1 = new mapboxgl.Marker()
+                    .setLngLat(coordinates)
+                    .addTo(map);
+
+
+            </script>
+            <% } %>
