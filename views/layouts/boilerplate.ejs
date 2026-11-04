@@ -115,14 +115,14 @@
     </header>
 
     <main class="container">
-        <% if (success && success.length) { %>
+        <% if (typeof success !=="undefined" && success?.length) { %>
             <div class="alert alert-success alert-dismissible fade show mt-3">
                 <%= success[0] %>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <% } %>
 
-                <% if (failure && failure.length) { %>
+                <% if (typeof failure !=="undefined" && failure?.length) { %>
                     <div class="alert alert-danger alert-dismissible fade show mt-3">
                         <%= failure[0] %>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
