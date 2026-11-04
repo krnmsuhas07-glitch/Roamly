@@ -99,18 +99,17 @@
                         <nav class="nav-link-1 auth-nav">
                             <% if (typeof curruser !=="undefined" && curruser){ %>
                                 <a href="/logout">Logout</a>
-                                <% } %>
-                                    <% else { %>
-                                        <a href="/user/signup">Signup</a>
-                                        <a href="/user/login">Login</a>
+                                <% } else { %>
+                                    <a href="/user/signup">Signup</a>
+                                    <a href="/user/login">Login</a>
 
-                                        <% } %>
+                                    <% } %>
 
-                                            <a href="/listings">25+ locations</a>
-                                            <label>
-                                                <input type="checkbox" id="preTax" checked>
-                                                Display price before taxes
-                                            </label>
+                                        <a href="/listings">25+ locations</a>
+                                        <label>
+                                            <input type="checkbox" id="preTax" checked>
+                                            Display price before taxes
+                                        </label>
                         </nav>
                     </div>
     </header>
