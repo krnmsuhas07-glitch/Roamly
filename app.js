@@ -34,10 +34,14 @@ async function main() {
 
 const store = MongoStore.create({
     mongoUrl: dburl,
+
+    collectionName: "sessions_v2",
+
     crypto: {
-        secret: process.env.SECRET,
+        secret: process.env.MONGO_SESSION_SECRET,
     },
-    touchAfter: 24 * 3600, // seconds (24 hours)
+
+    touchAfter: 24 * 3600,
 });
 
 store.on("error", (err) => {
