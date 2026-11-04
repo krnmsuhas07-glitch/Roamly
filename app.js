@@ -69,9 +69,9 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.failure = req.flash("failure");
-    res.locals.curruser = req.user;
+    res.locals.curruser = req.user || null;
     next();
-})
+});
 
 
 app.use("/", listingRoutes);
@@ -92,6 +92,8 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(8080, () => {
-    console.log("server is listening");
-})
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
