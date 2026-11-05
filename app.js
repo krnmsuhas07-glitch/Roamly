@@ -34,13 +34,11 @@ async function main() {
 
 const store = MongoStore.create({
     mongoUrl: dburl,
-
     collectionName: "sessions_v2",
-
+    stringify: false,
     crypto: {
         secret: process.env.MONGO_SESSION_SECRET,
     },
-
     touchAfter: 24 * 3600,
 });
 
@@ -95,15 +93,6 @@ app.all("/{*splat}", (req, res, next) => {
     next(new expresserror(404, "Page not found"));
 });
 
-app.use((err, req, res, next) => {
-    console.log(err.message);
-    const statusCode = err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-
-    res.status(statusCode).render("error.ejs", {
-        err
-    });
-});
 
 const PORT = process.env.PORT || 8080;
 

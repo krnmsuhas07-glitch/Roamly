@@ -106,10 +106,14 @@
                                     <% } %>
 
                                         <a href="/listings">25+ locations</a>
+
                                         <label>
-                                            <input type="checkbox" id="preTax" checked>
+                                            <input type="checkbox" id="preTax">
                                             Display price before taxes
                                         </label>
+
+
+
                         </nav>
                     </div>
     </header>
@@ -138,6 +142,7 @@
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/displaytaxes.js"></script>
     <script>
         document.querySelectorAll(".heart").forEach(function (btn) {
             btn.addEventListener("click", function () {
@@ -147,6 +152,8 @@
         });
     </script>
     <script>
+
+
         const forms = document.querySelectorAll(".needs-validation");
 
         forms.forEach(form => {

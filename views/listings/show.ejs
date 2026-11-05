@@ -74,6 +74,7 @@
                         <div class="booking-card">
                             <div class="booking-price">
                                 <strong>&#8377;<%= (listing.price || 0).toLocaleString("en-IN") %></strong>
+                                <i id="posttax" style="display: inline;">+18% GST</i>
                                 <span>per night</span>
                             </div>
                             <% if (curruser && listing.owner && listing.owner._id && curruser._id &&
